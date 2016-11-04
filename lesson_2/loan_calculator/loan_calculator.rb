@@ -16,8 +16,8 @@ def valid_string?(string)
 end
 
 def valid_number?(num)
-  (num.to_f.to_s == num || num.to_i.to_s == num) &&
-    num.to_f >= 0
+  (num.to_f.to_s == num || num.to_i.to_s == num) ||
+    num.to_f > 0
 end
 
 def valid_yes_no?(yes_no)
@@ -44,7 +44,7 @@ def input_valid_principal
   loop do
     principal = gets.chomp
     break if valid_number?(principal)
-    prompt "Please enter a number greater than zero."
+    prompt "Please enter a valid amount."
   end
   principal
 end
