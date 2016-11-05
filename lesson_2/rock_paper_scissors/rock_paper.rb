@@ -1,14 +1,14 @@
-#scissors beats paper and lizard
+# scissors beats paper and lizard
 # paper beats rock and spock
 # rock beats lizard and scissors
 # lizard beats spock and paper
 # spock beats rock and scissors
 require 'pry'
-CHOSEN = {'r' => 'rock',
-          'p' => 'paper',
-          'x' => 'scissors',
-          'l' => 'lizard',
-          's' => 'Spock'}
+CHOSEN = { 'r' => 'rock',
+           'p' => 'paper',
+           'x' => 'scissors',
+           'l' => 'lizard',
+           's' => 'Spock' }
 GAME_CHOICES = %w(rock(r) paper(p) scissors(x) lizard(l) Spock(s))
 VALID_CHOICES = %w(r p x l s)
 WINNING_COMBINATION = %w(rl rx pr ps xp xl ls lp sr sx)
@@ -34,7 +34,7 @@ def input_valid_choice(choice)
 end
 
 def display_choices(choice, computer_choice)
-  prompt "You chose: #{CHOSEN[choice]}" 
+  prompt "You chose: #{CHOSEN[choice]}"
   prompt "Computer chose: #{CHOSEN[computer_choice]}"
 end
 
@@ -58,13 +58,11 @@ def tally(result, score)
     score[:player] += 1
   elsif result == "You lost!"
     score[:computer] += 1
-  else
-    nil
   end
 end
 
 def display_score(score)
-  prompt "Player: #{score[:player]}. " +
+  prompt "Player: #{score[:player]}. " \
          "Computer: #{score[:computer]}."
 end
 
@@ -80,13 +78,13 @@ end
 
 def player_win?(score)
   player_wins = score[:player] == 5
-  if player_wins then display_win end
+  display_win if player_wins
   player_wins
 end
 
 def computer_win?(score)
   computer_wins = score[:computer] == 5
-  if computer_wins then display_loss end
+  display_loss if computer_wins
   computer_wins
 end
 
@@ -117,7 +115,7 @@ end
 prompt "Welcome to rock, paper, scissors, lizard, Spock!"
 
 loop do # main loop
-  score = {player: 0, computer: 0}
+  score = { player: 0, computer: 0 }
   loop do
     choice = [nil]
     computer_choice = [nil]
