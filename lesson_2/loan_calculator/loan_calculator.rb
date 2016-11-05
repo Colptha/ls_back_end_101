@@ -17,14 +17,11 @@ end
 
 def valid_number?(num)
   (num.to_f.to_s == num || num.to_i.to_s == num) ||
-    num.to_f > 0
+    num.to_f.positive?
 end
 
 def valid_yes_no?(yes_no)
-  (
-    (yes_no == 'y' || yes_no == 'yes') ||
-    (yes_no == 'n' || yes_no == 'no')
-  )
+  %w(yes y no n).include?(yes_no)
 end
 
 # validated input methods
@@ -52,7 +49,7 @@ end
 def input_valid_duration
   duration = nil
   loop do
-    duration = gets.chomp.split(", ")
+    duration = gets.chomp.split(/,\s*/)
     break if valid_number?(duration[0]) && valid_number?(duration[1])
     prompt "Please enter numbers in (years, months) format."
   end
@@ -101,16 +98,16 @@ loop do # main loop
   prompt "#{user_name}, how much money are you looking to borrow?"
   principal = input_valid_principal.to_f
 
+  prompt "What is the loan's APR?"
+  prompt "(If 5% then enter 5.)"
+  apr = input_valid_apr.to_f
+  monthly_interest = (apr / 12) / 100
+
   prompt "What loan term is desired?"
   prompt "Please enter (years, months)"
   prompt "Example: 2, 6"
   duration = input_valid_duration
   loan_months = (duration[0].to_f * 12) + duration[1].to_f
-
-  prompt "What is the loan's APR?"
-  prompt "(If 5% then enter 5.)"
-  apr = input_valid_apr.to_f
-  monthly_interest = (apr / 12) / 100
 
   monthly_pay = compute_monthly_pay(principal, loan_months, monthly_interest)
 
