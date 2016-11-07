@@ -9,29 +9,25 @@ CHOSEN = { 'r' => 'rock',
            'x' => 'scissors',
            'l' => 'lizard',
            's' => 'Spock' }
-GAME_CHOICES = %w(rock(r) paper(p) scissors(x) lizard(l) Spock(s))
-VALID_CHOICES = %w(r p x l s)
-WINNING_COMBINATION = %w(rl rx pr ps xp xl ls lp sr sx)
-VALID_YES_NO = %w(y yes no n)
+GAME_CHOICES = %w[rock(r) paper(p) scissors(x) lizard(l) Spock(s)]
+VALID_CHOICES = %w[r p x l s]
+WINNING_COMBINATION = %w[rl rx pr ps xp xl ls lp sr sx]
+VALID_YES_NO = %w[y yes no n]
 
 def prompt(message)
   puts "=> #{message}"
 end
 
-def determine_choices(choice, computer_choice)
-  input_valid_choice(choice)
-  computer_choice[0] = VALID_CHOICES.sample
-  display_choices(choice[0], computer_choice[0])
-end
-
-def input_valid_choice(choice)
+def player_choice(choice)
   loop do
     prompt "Choose one: #{GAME_CHOICES.join(', ')}"
-    choice[0] = gets.chomp
-    break if VALID_CHOICES.include?(choice[0])
+    choice = gets.chomp
+    break if VALID_CHOICES.include?(choice)
     prompt("That's not a valid choice.")
   end
+  choice
 end
+
 
 def display_choices(choice, computer_choice)
   prompt "You chose: #{CHOSEN[choice]}"
@@ -39,18 +35,13 @@ def display_choices(choice, computer_choice)
 end
 
 def determine_results(player, computer)
-  if WINNING_COMBINATION.include?("#{player[0]}#{computer[0]}")
+  if WINNING_COMBINATION.include?("#{player}#{computer}")
     "You won!"
-  elsif WINNING_COMBINATION.include?("#{computer[0]}#{player[0]}")
+  elsif WINNING_COMBINATION.include?("#{computer}#{player}")
     "You lost!"
   else
     "It's a tie!"
   end
-end
-
-def determine_score(result, score)
-  tally(result, score)
-  display_score(score)
 end
 
 def tally(result, score)
@@ -67,33 +58,11 @@ def display_score(score)
 end
 
 def winner?(score)
-  if player_win?(score)
-    true
-  elsif computer_win?(score)
-    true
-  else
-    false
+  if score[:player] == 5
+    "You are victorious!"
+  elsif score[:computer] == 5
+    "Defeat!"
   end
-end
-
-def player_win?(score)
-  player_wins = score[:player] == 5
-  display_win if player_wins
-  player_wins
-end
-
-def computer_win?(score)
-  computer_wins = score[:computer] == 5
-  display_loss if computer_wins
-  computer_wins
-end
-
-def display_win
-  prompt "You are victorious!"
-end
-
-def display_loss
-  prompt "Defeat!"
 end
 
 def rerun?
@@ -117,16 +86,22 @@ prompt "Welcome to rock, paper, scissors, lizard, Spock!"
 loop do # main loop
   score = { player: 0, computer: 0 }
   loop do
-    choice = [nil]
-    computer_choice = [nil]
+    choice = player_choice(choice)
+    computer_choice = VALID_CHOICES.sample
 
-    determine_choices(choice, computer_choice)
+    display_choices(choice, computer_choice)
 
     prompt result = determine_results(choice, computer_choice)
 
-    determine_score(result, score)
+    tally(result, score)
+    
+    display_score(score)
 
-    break if winner?(score)
+    winner = winner?(score)
+
+    prompt winner if winner
+
+    break if winner
   end
   break unless rerun?
 end
