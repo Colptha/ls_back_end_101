@@ -9,10 +9,10 @@ CHOSEN = { 'r' => 'rock',
            'x' => 'scissors',
            'l' => 'lizard',
            's' => 'Spock' }
-GAME_CHOICES = %w[rock(r) paper(p) scissors(x) lizard(l) Spock(s)]
-VALID_CHOICES = %w[r p x l s]
-WINNING_COMBINATION = %w[rl rx pr ps xp xl ls lp sr sx]
-VALID_YES_NO = %w[y yes no n]
+GAME_CHOICES = %w(rock(r) paper(p) scissors(x) lizard(l) Spock(s))
+VALID_CHOICES = %w(r p x l s)
+WINNING_COMBINATION = %w(rl rx pr ps xp xl ls lp sr sx)
+VALID_YES_NO = %w(y yes no n)
 
 def prompt(message)
   puts "=> #{message}"
@@ -27,7 +27,6 @@ def player_choice(choice)
   end
   choice
 end
-
 
 def display_choices(choice, computer_choice)
   prompt "You chose: #{CHOSEN[choice]}"
@@ -94,7 +93,7 @@ loop do # main loop
     prompt result = determine_results(choice, computer_choice)
 
     tally(result, score)
-    
+
     display_score(score)
 
     winner = winner?(score)
