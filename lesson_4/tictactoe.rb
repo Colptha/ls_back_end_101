@@ -40,20 +40,6 @@ def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
 
-# def joinor(possible_squares, connector = ',', conjunction = 'or')
-#   possible_options = ''
-#   possible_squares.each_with_index do |square, index|
-#     if possible_squares.count == 1
-#       possible_options = square.to_s
-#     elsif (index + 1) == possible_squares.count
-#       possible_options << " #{conjunction} #{square}"
-#     else
-#       possible_options << "#{square}#{connector} "
-#     end
-#   end
-#   possible_options
-# end
-
 def joinor(arr, delimiter=', ', word ='or')
   case arr.size
   when 0 then ''
@@ -77,61 +63,29 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  if two_of_three(brd, COMPUTER_MARKER)
-    square = two_of_three(brd, COMPUTER_MARKER)
-  elsif two_of_three(brd, PLAYER_MARKER)
-    square = two_of_three(brd, PLAYER_MARKER)
-  elsif brd[5] == INITIAL_MARKER
-    square = 5
-  else
-    square = empty_squares(brd).sample
-  end
+  square = if two_of_three(brd, COMPUTER_MARKER)
+             two_of_three(brd, COMPUTER_MARKER)
+           elsif two_of_three(brd, PLAYER_MARKER)
+             two_of_three(brd, PLAYER_MARKER)
+           elsif brd[5] == INITIAL_MARKER
+             5
+           else
+             empty_squares(brd).sample
+           end
   brd[square] = COMPUTER_MARKER
 end
 
 def two_of_three(brd, marker_check)
   WINNING_LINES.each do |line|
-    if brd.values_at(*line).count(marker_check) == 2 &&
-       brd.values_at(*line).count(INITIAL_MARKER) == 1
-      square = brd.select do |space, marker|
-                 line.include?(space) && marker == INITIAL_MARKER
-               end.key(INITIAL_MARKER)
-      return square
-    end
+    next unless brd.values_at(*line).count(marker_check) == 2 &&
+                brd.values_at(*line).count(INITIAL_MARKER) == 1
+    square = brd.select do |space, marker|
+      line.include?(space) && marker == INITIAL_MARKER
+    end.key(INITIAL_MARKER)
+    return square
   end
   nil
 end
-
-# LAUNCH
-# def computer_places_piece!(brd)
-#   square = nil
-
-#   WINNING_LINES.each do |line|
-#     square = find_at_risk_square(line, brd, COMPUTER_MARKER)
-#     break if square
-#   end
-
-#   if !square
-#     WINNING_LINES.each do |line|
-#       square = find_at_risk_square(line, brd, PLAYER_MARKER)
-#       break if square
-#     end
-#   end
-
-#   if !square
-#     square = empty_squares(brd).sample
-#   end
-
-#   brd[square] = COMPUTER_MARKER
-# end
-# LAUNCH
-# def find_at_risk_square(line, brd, marker)
-#   if brd.values_at(*line).count(marker) == 2
-#     brd.select { |k, v| line.include?(k) && v == INITIAL_MARKER}.keys.first
-#   else
-#     nil
-#   end
-# end
 
 def board_full?(brd)
   empty_squares(brd).empty?
@@ -235,7 +189,7 @@ loop do # program loop
   end # end of 5 game loop
   display_winner(score)
 
-  break unless replay == 'y'
+  break unless replay? == 'y'
 end # end of program loop
 
 prompt "Thanks for playing Tic Tac Toe! Good Bye!"
