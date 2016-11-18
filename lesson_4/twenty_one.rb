@@ -136,6 +136,22 @@ def winner?(score)
   score.values.include?(5)
 end
 
+def determine_winner(score)
+  winner = "Player" if score[:player] == 5
+  winner = "Dealer" if score[:dealer] == 5
+  winner
+end
+
+def display_winner(score)
+ puts "========================="
+ puts "*************************"
+ puts " "
+ puts "#{determine_winner(score)} Wins!"
+ puts " "
+ puts "*************************"
+ puts "========================="
+end
+
 system 'clear'
 prompt "Welcome to Twenty-One!"
 sleep 1.5
@@ -209,6 +225,8 @@ loop do
 
     winner?(score) ? break : next
   end
+
+  display_winner(score)
   break unless play_again?
 end
 system 'clear'
