@@ -61,10 +61,11 @@ end
 def play_again?
   loop do
     puts "-------------"
-    prompt "Do you want to play again? (y or n)"
+    prompt "Do you want to play again? (y/n)"
     answer = gets.chomp.downcase
     break if ['y', 'yes'].include?(answer)
     return false if ['n', 'no'].include?(answer)
+    prompt "Sorry, you must enter either 'y' or 'n'"
   end
   true
 end
@@ -86,6 +87,23 @@ def deal_cards(player_cards, dealer_cards, deck)
   end
 end
 
+def display_hand_after_hit(player_cards)
+  prompt "You chose to hit!"
+  prompt "Your cards are now: #{player_cards}"
+  prompt "Your total is now: #{total(player_cards)}"
+end
+
+def hit_or_stay
+  player_turn = nil
+  loop do
+    prompt "Would you like to (h)it or (s)tay?"
+    player_turn = gets.chomp.downcase
+    break if ['h', 's'].include?(player_turn)
+    prompt "Sorry, must enter 'h' or 's'."
+  end
+  player_turn
+end
+
 system 'clear'
 prompt "Welcome to Twenty-One!"
 sleep 1.5
@@ -103,19 +121,11 @@ loop do
 
   # player turn
   loop do
-    player_turn = nil
-    loop do
-      prompt "Would you like to (h)it or (s)tay?"
-      player_turn = gets.chomp.downcase
-      break if ['h', 's'].include?(player_turn)
-      prompt "Sorry, must enter 'h' or 's'."
-    end
+    player_turn = hit_or_stay
 
     if player_turn == 'h'
-      hit(player_cards, deck)
-      prompt "You chose to hit!"
-      prompt "Your cards are now: #{player_cards}"
-      prompt "Your total is now: #{total(player_cards)}"
+      hit(player_cards, deck) if player_turn == 'h'
+      display_hand_after_hit(player_cards)
     end
 
     break if player_turn == 's' || busted?(player_cards)
