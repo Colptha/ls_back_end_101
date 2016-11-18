@@ -123,10 +123,8 @@ loop do
   loop do
     player_turn = hit_or_stay
 
-    if player_turn == 'h'
-      hit(player_cards, deck) if player_turn == 'h'
-      display_hand_after_hit(player_cards)
-    end
+    hit(player_cards, deck) if player_turn == 'h'
+    display_hand_after_hit(player_cards) if player_turn == 'h'
 
     break if player_turn == 's' || busted?(player_cards)
   end
