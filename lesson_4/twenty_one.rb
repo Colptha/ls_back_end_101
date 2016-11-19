@@ -2,7 +2,7 @@ require 'io/console'
 require 'pry'
 
 SUITS = ['H', 'D', 'S', 'C'].freeze
-VALUES = (('2'..'10').to_a + ['J', 'Q', 'K', 'A']).freeze
+VALUES = %w(2 3 4 5 6 7 8 9 10 J Q K A).freeze
 WIN_NUM = 21
 DEALER_GOAL = 17
 
@@ -20,7 +20,7 @@ def total(cards)
   sum = 0
   values.each do |value|
     sum += 11 if value == 'A'
-    sum += 10 if value.to_i.zero?
+    sum += 10 if %w(J Q K).include?(value)
     sum += value.to_i unless value.to_i.zero?
   end
 
@@ -103,8 +103,8 @@ end
 
 def deal_cards(player_cards, dealer_cards, deck)
   2.times do
-    player_cards << deck.pop
-    dealer_cards << deck.pop
+    hit(player_cards, deck)
+    hit(dealer_cards, deck)
   end
 end
 
@@ -143,13 +143,13 @@ def determine_winner(score)
 end
 
 def display_winner(score)
- puts "========================="
- puts "*************************"
- puts " "
- puts "#{determine_winner(score)} Wins!"
- puts " "
- puts "*************************"
- puts "========================="
+  puts "========================="
+  puts "*************************"
+  puts " "
+  puts "#{determine_winner(score)} Wins!"
+  puts " "
+  puts "*************************"
+  puts "========================="
 end
 
 system 'clear'
@@ -160,18 +160,15 @@ loop do
   score = { player: 0, dealer: 0 }
   loop do
     system 'clear'
-    # initialize vars
     deck = initialize_deck
     player_cards = []
     dealer_cards = []
 
-    # deal cards then set totals
     deal_cards(player_cards, dealer_cards, deck)
     player_total = total(player_cards)
     dealer_total = total(dealer_cards)
     display_initial_hands(dealer_cards, player_cards, player_total)
 
-    # player turn
     loop do
       player_turn = hit_or_stay
       if player_turn == 'h'
@@ -183,7 +180,6 @@ loop do
       break if player_turn == 's' || busted?(player_total)
     end
 
-    # if player busts
     if busted?(player_total)
       tally(detect_result(dealer_total, player_total), score)
       display_hands(player_cards, dealer_cards, player_total, dealer_total)
@@ -194,7 +190,6 @@ loop do
       prompt "You stayed at #{player_total}"
     end
 
-    # dealer turn
     prompt "Dealer turn..."
 
     loop do
@@ -206,7 +201,6 @@ loop do
       prompt "Dealer's cards are now: #{dealer_cards}"
     end
 
-    # if dealer busts
     if busted?(dealer_total)
       tally(detect_result(dealer_total, player_total), score)
       prompt "Dealer total is now: #{dealer_total}"
@@ -217,7 +211,6 @@ loop do
       prompt "Dealer stays at #{dealer_total}"
     end
 
-    # both player and dealer stay - compare cards!
     display_hands(player_cards, dealer_cards, player_total, dealer_total)
     tally(detect_result(dealer_total, player_total), score)
     display_results(dealer_total, player_total)
