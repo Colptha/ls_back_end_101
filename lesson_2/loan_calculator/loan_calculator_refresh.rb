@@ -1,10 +1,3 @@
-
-# LOAN FORMULA
-# m = p * (j / (1 - (1 + j)**(-n)))
-# m = monthly payment
-# p = principal
-# j = monthly interest rate
-# n = loan duration in months
 require 'pry'
 def prompt(message)
   puts "=> #{message}"
@@ -24,10 +17,8 @@ is_months = false
 loop do
   prompt 'Is loan duration in years or months?'
   response = gets.chomp.downcase
-  break if response.match?(/^year$/) ||
-           response.match?(/^years$/)
-  break if is_months = response.match?(/^month$/) ||
-                       response.match?(/^months$/)
+  break if response.match?(/year/)
+  break if is_months = response.match?(/month/)
 end
 
 duration = ''
@@ -50,6 +41,6 @@ monthly_interest = apr.to_f / 100 / 12
 months_duration = is_months ? duration : duration * 12
 
 monthly_payment = principal * (monthly_interest /
-                  (1 - (1 + monthly_interest)**(-months_duration)))
+                  (1 - (1 + monthly_interest)**-months_duration))
 
 prompt(format("Your monthly payment will be %.02f", monthly_payment))
