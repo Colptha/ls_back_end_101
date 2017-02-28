@@ -1,4 +1,3 @@
-require 'pry'
 def prompt(message)
   puts "=> #{message}"
 end
@@ -18,7 +17,7 @@ loop do
   prompt 'Is loan duration in years or months?'
   response = gets.chomp.downcase
   break if response.match?(/year/)
-  break if is_months = response.match?(/month/)
+  break if (is_months = response.match?(/month/))
 end
 
 duration = ''
