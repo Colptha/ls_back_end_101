@@ -1,22 +1,27 @@
-# scissors beats paper and lizard
-# paper beats rock and spock
-# rock beats lizard and scissors
-# lizard beats spock and paper
-# spock beats rock and scissors
+require 'io/console'
+
 DISPLAY_CHOICES = %w(rock(r) paper(p) scissors(x) lizard(l) spock(s))
 VALID_CHOICES = %w(r p x l s)
-WINNING_COMBO = %w(xp xl pr ps rl rx ls lp sr sx)
-WINNING_NUMBER = 5
-
+WINNING_COMBOS = %w(xp xl pr ps rl rx ls lp sr sx)
+REQUIRED_WINS = 5
 
 def prompt(msg)
   puts "=> #{msg}"
 end
 
+def clear_screen
+  system('clear') || system('cls')
+end
+
+def wait_for_key_press
+  prompt 'Press any key to continue.'
+  STDIN.getch
+end
+
 def prompt_choice
   loop do
     prompt "Choose one: #{DISPLAY_CHOICES.join(', ')}"
-    choice = gets.chomp
+    choice = gets.chomp.strip.downcase
     if VALID_CHOICES.include?(choice) then return choice end
     prompt "That's not a valid choice."
   end
@@ -27,13 +32,13 @@ def generate_choice
 end
 
 def determine_winner(player, computer)
-  winner = 'player' if WINNING_COMBO.include?(player + computer)
-  winner = 'computer' if WINNING_COMBO.include?(computer + player)
-  return winner ? winner : 'tie'
+  winner = 'player' if WINNING_COMBOS.include?(player + computer)
+  winner = 'computer' if WINNING_COMBOS.include?(computer + player)
+  winner ? winner : 'tie'
 end
 
 def display_choices(p_choice, c_choice)
-    prompt "Player chose: #{p_choice}\nComputer chose: #{c_choice}"
+  prompt "Player chose: #{p_choice}\n=> Computer chose: #{c_choice}"
 end
 
 def display_result(winner)
@@ -59,11 +64,11 @@ def update_score(scores, winner)
 end
 
 def winner?(scores)
-  scores.value?(WINNING_NUMBER)
+  scores.value?(REQUIRED_WINS)
 end
 
 def display_winner(scores)
-  prompt "#{scores.key(5).capitalize} is the first to #{WINNING_NUMBER} wins!"
+  prompt "#{scores.key(5).capitalize} is the first to #{REQUIRED_WINS} wins!"
 end
 
 def display_score(scores)
@@ -75,9 +80,10 @@ def display_score(scores)
 end
 
 loop do
-  scores = {'player' => 0, 'computer' => 0, 'tie' => 0}
+  scores = { 'player' => 0, 'computer' => 0, 'tie' => 0 }
 
   loop do
+    clear_screen
     player_choice = prompt_choice
     computer_choice = generate_choice
 
@@ -90,6 +96,7 @@ loop do
     display_score(scores)
 
     break if winner?(scores)
+    wait_for_key_press
   end
 
   display_winner(scores)
