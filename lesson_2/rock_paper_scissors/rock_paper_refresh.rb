@@ -22,7 +22,7 @@ def prompt_choice
   loop do
     prompt "Choose one: #{DISPLAY_CHOICES.join(', ')}"
     choice = gets.chomp.strip.downcase
-    if VALID_CHOICES.include?(choice) then return choice end
+    return choice if VALID_CHOICES.include?(choice)
     prompt "That's not a valid choice."
   end
 end
@@ -53,8 +53,8 @@ def play_again?
   loop do
     prompt "Would you like to play again (y/n)?"
     answer = gets.chomp.downcase.strip
-    if %w(y yes yeah sure).include?(answer) then return true end
-    if %w(n no nope uhuh).include?(answer) then return false end
+    return choice if %w(y yes yeah sure).include?(answer)
+    return false if %w(n no nope uhuh).include?(answer)
     prompt "That's not a valid choice."
   end
 end

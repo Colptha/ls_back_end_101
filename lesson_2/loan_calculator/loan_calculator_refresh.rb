@@ -33,7 +33,7 @@ apr = ''
 loop do
   prompt 'Enter APR of loan'
   apr = gets.chomp
-  break if apr.match?(/^\d+.?\d*$/) || apr.match?(/^\d*.\d+/)
+  break if apr.match?(/^\d+\.?\d*$/) || apr.match?(/^\d*\.\d+$/)
 end
 monthly_interest = apr.to_f / 100 / 12
 
